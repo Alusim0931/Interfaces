@@ -1,0 +1,12 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <string name="app_name">My Application_compose</string>
+    <string name="bienvenida">Hola Mundo</string>
+    <string name="PlayJuegos">Play Juegos</string>
+    <string name="Play">Play</string>
+    <string name="NewPLayer">New Player</string>
+    <string name="Preferences">Preferences</string>
+    <string name="About">About</string>
+
+
+
+</resources>
