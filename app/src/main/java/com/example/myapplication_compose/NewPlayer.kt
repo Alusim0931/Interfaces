@@ -1,5 +1,7 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,16 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.example.myapplication_compose.R
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPlayer() {
     var text1 by remember { mutableStateOf("Name") }
@@ -31,6 +31,10 @@ fun NewPlayer() {
     var text3 by remember { mutableStateOf("NickName") }
     var text4 by remember { mutableStateOf("Phone") }
     var text5 by remember { mutableStateOf("Email") }
+
+    var selectedText by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    val phoneOptions = listOf("875638098", "789765312", "086539429")
 
     val state = rememberScrollState()
     val modifier = Modifier.verticalScroll(state)
@@ -48,30 +52,11 @@ fun NewPlayer() {
         .size(80.dp)
         .padding(end = 32.dp)
 
-    val primaryColor = Color(0xFF007ACC)
-    val backgroundWithTransparency = Color(0xCC007ACC)
-
-    val textFieldBackgroundModifier = Modifier
-        .fillMaxWidth()
-        .height(60.dp)
-        .padding(8.dp)
-        .background(
-            backgroundWithTransparency,
-            shape = RoundedCornerShape(8.dp)
-        )
-
-
     val screenBackgroundColor = Color.Green
 
-    val firaSansFamily = FontFamily(
-        Font(R.font.courgette, FontWeight.Light),
-        Font(R.font.courgette, FontWeight.Normal),
-        Font(R.font.courgette, FontWeight.Normal, FontStyle.Italic),
-        Font(R.font.courgette, FontWeight.Medium),
-        Font(R.font.courgette, FontWeight.Bold)
-    )
-
     var showError by remember { mutableStateOf(false) }
+
+    //val series = listOf("875638098", "789765312", "086539429")
 
     Surface(
         modifier = Modifier
@@ -99,13 +84,14 @@ fun NewPlayer() {
                     value = text1,
                     onValueChange = { newText -> text1 = newText },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
+                        imeAction = androidx.compose.ui.text.input.ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            // Acciones cuando se presiona "Done" en el teclado
                         }
                     ),
-                    modifier = textFieldBackgroundModifier
+                    modifier = textFieldModifier
                 )
             }
             if (showError && text1.isBlank()) {
@@ -124,13 +110,14 @@ fun NewPlayer() {
                     value = text2,
                     onValueChange = { newText -> text2 = newText },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
+                        imeAction = androidx.compose.ui.text.input.ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            // Acciones cuando se presiona "Done" en el teclado
                         }
                     ),
-                    modifier = textFieldBackgroundModifier
+                    modifier = textFieldModifier
                 )
             }
 
@@ -142,13 +129,14 @@ fun NewPlayer() {
                     value = text3,
                     onValueChange = { newText -> text3 = newText },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
+                        imeAction = androidx.compose.ui.text.input.ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            // Acciones cuando se presiona "Done" en el teclado
                         }
                     ),
-                    modifier = textFieldBackgroundModifier
+                    modifier = textFieldModifier
                 )
             }
             if (showError && text3.isBlank()) {
@@ -169,19 +157,33 @@ fun NewPlayer() {
                     modifier = imageModifier,
                     contentScale = ContentScale.Fit
                 )
-                Button(
-                    onClick = {
+
+                OutlinedTextField(
+                    value = selectedText,
+                    onValueChange = {
+                        selectedText = it
                     },
+                    enabled = false,
+                    readOnly = true,
                     modifier = Modifier
+                        .clickable { expanded = true }
                         .fillMaxWidth()
-                        .padding(16.dp)
+                )
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = "Change",
-                        fontSize = 24.sp,
-                        fontFamily = firaSansFamily,
-                        color = Color.White
-                    )
+                    phoneOptions.forEach { option ->
+                        DropdownMenuItem(
+                            onClick = {
+                                expanded = false
+                                selectedText = option
+                            }
+                        ) {
+                        }
+                    }
                 }
             }
 
@@ -199,13 +201,14 @@ fun NewPlayer() {
                     value = text4,
                     onValueChange = { newText -> text4 = newText },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
+                        imeAction = androidx.compose.ui.text.input.ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            // Acciones cuando se presiona "Done" en el teclado
                         }
                     ),
-                    modifier = textFieldBackgroundModifier
+                    modifier = textFieldModifier
                 )
             }
 
@@ -223,13 +226,14 @@ fun NewPlayer() {
                     value = text5,
                     onValueChange = { newText -> text5 = newText },
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Done
+                        imeAction = androidx.compose.ui.text.input.ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
                         onDone = {
+                            // Acciones cuando se presiona "Done" en el teclado
                         }
                     ),
-                    modifier = textFieldBackgroundModifier
+                    modifier = textFieldModifier
                 )
             }
 
@@ -244,7 +248,7 @@ fun NewPlayer() {
                 Text(
                     text = "Add New Player",
                     fontSize = 24.sp,
-                    fontFamily = firaSansFamily,
+                    fontFamily = FontFamily.Default,
                     color = Color.White
                 )
             }
@@ -252,4 +256,8 @@ fun NewPlayer() {
             Spacer(modifier = Modifier.height(64.dp))
         }
     }
+}
+
+fun DropdownMenuItem(onClick: () -> Unit, interactionSource: () -> Unit) {
+
 }
